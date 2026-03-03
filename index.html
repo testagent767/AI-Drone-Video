@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GZ AI Drone Visualization</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.sub {
+  color: #94a3b8;
+  margin-bottom: 30px;
+}
+
+/* MAP SECTION */
+.map-container {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  height: 500px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(0,0,0,.6);
+}
+
+.map-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* FAKE PIN */
+.pin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  background: #2563eb;
+  border-radius: 50%;
+  transform: translate(-50%, -100%);
+  box-shadow: 0 0 20px rgba(37,99,235,.8);
+  display: none;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(37,99,235,.7); }
+  70% { box-shadow: 0 0 0 20px rgba(37,99,235,0); }
+  100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+}
+
+/* BUTTON */
+button {
+  margin-top: 30px;
+  padding: 14px 28px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: #2563eb;
+  color: white;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+/* STATUS */
+#status {
+  margin-top: 20px;
+  color: #38bdf8;
+  min-height: 24px;
+}
+
+/* VIDEO */
+video {
+  margin-top: 30px;
+  width: 100%;
+  max-width: 900px;
+  border-radius: 16px;
+  display: none;
+  box-shadow: 0 0 40px rgba(0,0,0,.7);
+}
+
+.notice {
+  margin-top: 15px;
+  font-size: 13px;
+  color: #64748b;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>AI Drone Property Visualization</h1>
+  <div class="sub">
+    Experience how GZ AI generates cinematic drone tours instantly.
+  </div>
+
+  <div class="map-container">
+    <iframe 
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15002.786128663773!2d-155.87608178962384!3d19.937189056254127!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x79538793d6e16f1f%3A0xa7e015de3a37325a!2sMauna%20Lani%2C%20Auberge%20Collection!5e0!3m2!1str!2sus!4v1772563934990!5m2!1str!2sus"
+      class="map-frame"
+      allowfullscreen=""
+      loading="lazy">
+    </iframe>
+
+    <div id="fakePin" class="pin"></div>
+  </div>
+
+  <button onclick="generateDrone()">Generate AI Drone Video</button>
+
+  <div id="status"></div>
+
+  <video id="droneVideo" controls>
+    <source src="demo-drone.mp4" type="video/mp4">
+    Your browser does not support video.
+  </video>
+
+  <div class="notice">
+    *Demo visualization available for featured showcase property.
+  </div>
+
+</div>
+
+<script>
+function generateDrone() {
+  const pin = document.getElementById("fakePin");
+  const status = document.getElementById("status");
+  const video = document.getElementById("droneVideo");
+
+  video.style.display = "none";
+  pin.style.display = "block";
+  status.innerText = "Analyzing property terrain...";
+
+  setTimeout(() => {
+    status.innerText = "Calculating optimal cinematic flight path...";
+  }, 1500);
+
+  setTimeout(() => {
+    status.innerText = "Rendering AI drone visualization...";
+  }, 3000);
+
+  setTimeout(() => {
+    status.innerText = "Visualization ready.";
+    video.style.display = "block";
+  }, 4500);
+}
+</script>
+
+</body>
+</html>
