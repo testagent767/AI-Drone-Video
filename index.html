@@ -191,6 +191,13 @@ function generateDrone() {
   setTimeout(() => {
     status.innerText = "Visualization ready.";
     video.style.display = "block";
+
+    // 🔥 Smooth auto scroll to video
+    video.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
   }, 4500);
 }
 </script>
