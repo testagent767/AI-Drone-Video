@@ -6,9 +6,7 @@
 <title>GZ AI Drone Visualization</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -25,10 +23,7 @@ body {
   text-align: center;
 }
 
-h1 {
-  font-size: 32px;
-  margin-bottom: 10px;
-}
+h1 { font-size: 32px; margin-bottom: 10px; }
 
 .sub {
   color: #94a3b8;
@@ -149,19 +144,48 @@ button:hover:not(:disabled) {
   color: #64748b;
 }
 
+/* POPUP */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.popup-box {
+  background: #1e293b;
+  padding: 30px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.popup-box h2 { margin-bottom: 10px; }
+
+.popup-box p {
+  font-size: 14px;
+  color: #94a3b8;
+  margin-bottom: 20px;
+}
+
+.popup-box input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  h1 {
-    font-size: 24px;
-  }
-
-  .sub {
-    font-size: 14px;
-  }
-
-  button {
-    width: 100%;
-  }
+  h1 { font-size: 24px; }
+  .sub { font-size: 14px; }
+  button { width: 100%; }
 }
 </style>
 </head>
@@ -181,7 +205,6 @@ button:hover:not(:disabled) {
       class="map-frame"
       loading="lazy">
     </iframe>
-
     <div id="fakePin" class="pin"></div>
   </div>
 
@@ -210,9 +233,52 @@ button:hover:not(:disabled) {
 
 </div>
 
-<script>
-function generateDrone() {
+<!-- EMAIL POPUP -->
+<div id="emailPopup" class="popup-overlay">
+  <div class="popup-box">
+    <h2>Unlock AI Drone Demo</h2>
+    <p>Enter your work email to generate the AI drone visualization.</p>
+    <input type="email" id="userEmail" placeholder="Work Email" required />
+    <input type="text" id="agencyName" placeholder="Agency Name" required />
+    <button onclick="submitLead()">Unlock & Generate</button>
+  </div>
+</div>
 
+<script>
+const WEBHOOK_URL = "https://bjl82de9.rpcl.app/webhook/9c8df4f1-84a0-4d33-8333-0e51cb4bfe09";
+
+function generateDrone() {
+  const alreadySubmitted = sessionStorage.getItem("gz_lead_submitted");
+  if (!alreadySubmitted) {
+    document.getElementById("emailPopup").style.display = "flex";
+    return;
+  }
+  startDroneProcess();
+}
+
+function submitLead() {
+  const email = document.getElementById("userEmail").value.trim();
+  const name = document.getElementById("agencyName").value.trim();
+
+  if (!email || !name) {
+    alert("Please fill all fields.");
+    return;
+  }
+
+  fetch(WEBHOOK_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: email, agency: name })
+  }).then(() => {
+    sessionStorage.setItem("gz_lead_submitted", "true");
+    document.getElementById("emailPopup").style.display = "none";
+    startDroneProcess();
+  }).catch(() => {
+    alert("Something went wrong. Please try again.");
+  });
+}
+
+function startDroneProcess() {
   const btn = document.getElementById("generateBtn");
   const pin = document.getElementById("fakePin");
   const status = document.getElementById("status");
@@ -225,32 +291,20 @@ function generateDrone() {
   pin.style.display = "block";
 
   status.innerText = "Analyzing property terrain...";
-
   let progress = 0;
 
   const interval = setInterval(() => {
     progress += 2;
     progressBar.style.width = progress + "%";
 
-    if (progress >= 30) {
-      status.innerText = "Calculating optimal cinematic flight path...";
-    }
-
-    if (progress >= 65) {
-      status.innerText = "Rendering AI drone visualization...";
-    }
+    if (progress >= 30) status.innerText = "Calculating optimal cinematic flight path...";
+    if (progress >= 65) status.innerText = "Rendering AI drone visualization...";
 
     if (progress >= 100) {
       clearInterval(interval);
       status.innerText = "Visualization ready.";
-
       video.style.display = "block";
-
-      video.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
-
+      video.scrollIntoView({ behavior: "smooth", block: "center" });
       btn.disabled = false;
     }
   }, 90);
